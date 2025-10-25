@@ -9,7 +9,10 @@ from .helpers import (
     clean_text,
     extract_year,
     extract_mileage,
-    format_currency
+    format_currency,
+    extract_make_model,
+    normalize_german_text,
+    validate_listing_data
 )
 
 __all__ = [
@@ -17,5 +20,8 @@ __all__ = [
     'clean_text',
     'extract_year',
     'extract_mileage',
-    'format_currency'
+    'format_currency',
+    'extract_make_model',
+    'normalize_german_text',
+    'validate_listing_data'
 ]

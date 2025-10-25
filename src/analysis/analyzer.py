@@ -110,11 +110,15 @@ class ListingAnalyzer:
         
         # Calculate differences if both have data
         if broken_stats and functional_stats:
+            # Calculate mean ratio with robust zero check
+            mean_ratio = None
+            if abs(broken_stats['mean']) > 1e-10:
+                mean_ratio = functional_stats['mean'] / broken_stats['mean']
+            
             comparison['difference'] = {
                 'mean_diff': functional_stats['mean'] - broken_stats['mean'],
                 'median_diff': functional_stats['median'] - broken_stats['median'],
-                'mean_ratio': (functional_stats['mean'] / broken_stats['mean'] 
-                              if broken_stats['mean'] > 0 else None)
+                'mean_ratio': mean_ratio
             }
         
         return comparison

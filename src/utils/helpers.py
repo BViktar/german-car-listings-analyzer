@@ -28,8 +28,26 @@ def clean_price(price_text: str) -> Optional[float]:
     if not price_text:
         return None
     
-    # Remove currency symbols and common separators
-    cleaned = re.sub(r'[€$£,.\s]', '', price_text)
+    # Remove currency symbols
+    cleaned = re.sub(r'[€$£]', '', price_text)
+    # Remove thousand separators (dots, commas, spaces) but keep last decimal point
+    # First normalize to use dot as decimal separator
+    cleaned = cleaned.strip()
+    # Remove spaces
+    cleaned = cleaned.replace(' ', '')
+    # In German prices, dots are thousand separators and commas are decimal
+    # Replace comma with dot for decimal
+    if ',' in cleaned:
+        parts = cleaned.rsplit(',', 1)
+        if len(parts) == 2 and len(parts[1]) <= 2:
+            # This is likely a decimal separator
+            cleaned = parts[0].replace('.', '') + '.' + parts[1]
+        else:
+            cleaned = cleaned.replace(',', '')
+    # Remove dots used as thousand separators
+    else:
+        # If no comma, dots are thousand separators
+        cleaned = cleaned.replace('.', '')
     
     try:
         return float(cleaned)
