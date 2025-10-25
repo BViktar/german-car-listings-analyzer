@@ -2,7 +2,6 @@ import csv
 from pathlib import Path
 from typing import Dict, List
 import logging
-import pandas as pd
 
 
 class CarReportGenerator:
