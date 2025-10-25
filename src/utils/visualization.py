@@ -133,19 +133,31 @@ class CarDataVisualizer:
                 engine='openpyxl'
             ) as writer:
                 # Price analysis
-                self._export_price_analysis(analysis['price_comparison'], writer)
+                self._export_price_analysis(
+                    analysis.get('price_comparison', {}),
+                    writer
+                )
 
                 # Model statistics
-                self._export_model_statistics(analysis['model_statistics'], writer)
+                self._export_model_statistics(
+                    analysis.get('model_statistics', {}),
+                    writer
+                )
 
                 # Mileage analysis
-                self._export_mileage_analysis(analysis['mileage_analysis'], writer)
+                self._export_mileage_analysis(
+                    analysis.get('mileage_analysis', {}),
+                    writer
+                )
 
                 # Age distribution
-                self._export_age_analysis(analysis['age_distribution'], writer)
+                self._export_age_analysis(
+                    analysis.get('age_distribution', {}),
+                    writer
+                )
 
                 # Summary
-                self._export_summary(analysis['summary'], writer)
+                self._export_summary(analysis.get('summary', {}), writer)
 
             self.logger.info("Excel report exported successfully")
 
