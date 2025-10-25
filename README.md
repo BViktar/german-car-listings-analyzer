@@ -143,7 +143,7 @@ german-car-listings-analyzer/
 - Python 3.8+
 - beautifulsoup4 >= 4.12.0
 - requests >= 2.31.0
-- urllib3 >= 2.0.0
+- urllib3 >= 2.0.6
 - lxml >= 4.9.0
 
 ## License

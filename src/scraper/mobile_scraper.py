@@ -187,9 +187,13 @@ class MobileDeScraper(BaseScraper):
             Parsed listing dictionary or None
         """
         try:
+            # Extract brand name, handling both dict and string formats
+            brand = data.get('brand', {})
+            make = brand.get('name', '') if isinstance(brand, dict) else ''
+            
             return {
                 'title': data.get('name', ''),
-                'make': data.get('brand', {}).get('name', '') if isinstance(data.get('brand'), dict) else '',
+                'make': make,
                 'model': data.get('model', ''),
                 'year': data.get('productionDate', data.get('modelDate')),
                 'mileage': self._extract_number(str(data.get('mileageFromOdometer', {}).get('value', ''))),
@@ -310,6 +314,9 @@ class MobileDeScraper(BaseScraper):
         """
         Extract numeric value from text string.
         
+        Handles common European number formats with dots and commas as separators.
+        Note: This extracts integers only and removes all separators.
+        
         Args:
             text: Text containing a number
             
@@ -317,7 +324,8 @@ class MobileDeScraper(BaseScraper):
             Extracted integer value or None
         """
         try:
-            # Remove common separators and currency symbols
+            # Remove currency symbols and common separators (dots, commas, spaces)
+            # This works for formats like: €15,000, 100.000 km, $25,000
             cleaned = re.sub(r'[€$,.\s]', '', text)
             # Extract first sequence of digits
             match = re.search(r'\d+', cleaned)
