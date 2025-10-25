@@ -193,9 +193,38 @@ class TestCarComparisonAnalyzer(unittest.TestCase):
     
     def test_empty_lists_handling(self):
         """Test that analyzer handles empty lists gracefully."""
-        # This should raise an error or handle gracefully
-        with self.assertRaises(Exception):
-            self.analyzer.analyze_listings([], [])
+        # Empty broken cars should raise ValueError
+        with self.assertRaises(ValueError) as context:
+            self.analyzer.analyze_listings([], self.functional_cars)
+        self.assertIn("broken_cars list cannot be empty", str(context.exception))
+        
+        # Empty functional cars should raise ValueError
+        with self.assertRaises(ValueError) as context:
+            self.analyzer.analyze_listings(self.broken_cars, [])
+        self.assertIn("functional_cars list cannot be empty", str(context.exception))
+    
+    def test_invalid_input_types(self):
+        """Test that analyzer handles invalid input types."""
+        # Non-list input should raise ValueError
+        with self.assertRaises(ValueError) as context:
+            self.analyzer.analyze_listings("not a list", self.functional_cars)
+        self.assertIn("must be lists", str(context.exception))
+        
+        # Non-dict items in list should raise ValueError
+        with self.assertRaises(ValueError) as context:
+            self.analyzer.analyze_listings([1, 2, 3], self.functional_cars)
+        self.assertIn("must be dictionaries", str(context.exception))
+    
+    def test_missing_required_columns(self):
+        """Test that analyzer validates required columns."""
+        # Missing 'price' column
+        broken_incomplete = [{'make': 'BMW', 'model': '320i', 'year': 2015, 'mileage': 120000}]
+        
+        with self.assertRaises(KeyError) as context:
+            self.analyzer.analyze_listings(broken_incomplete, self.functional_cars)
+        self.assertIn("Missing required columns", str(context.exception))
+        self.assertIn("price", str(context.exception))
+    
     
     def test_single_car_lists(self):
         """Test that analyzer works with single car in each list."""

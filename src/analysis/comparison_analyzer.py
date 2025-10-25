@@ -36,12 +36,20 @@ class CarComparisonAnalyzer:
             ComparisonResult containing all analysis results
             
         Raises:
-            Exception: If analysis fails
+            ValueError: If input data is invalid (empty lists, missing required columns)
+            KeyError: If required columns are missing from the data
+            Exception: If analysis fails for other reasons
         """
         try:
+            # Validate input data
+            self._validate_input(broken_cars, functional_cars)
+            
             # Convert listings to DataFrames
             broken_df = pd.DataFrame(broken_cars)
             functional_df = pd.DataFrame(functional_cars)
+            
+            # Validate required columns
+            self._validate_dataframes(broken_df, functional_df)
             
             # Perform analyses
             price_comparison = self._analyze_prices(broken_df, functional_df)
@@ -58,9 +66,59 @@ class CarComparisonAnalyzer:
                 summary=summary
             )
             
-        except Exception as e:
-            self.logger.error(f"Error analyzing listings: {str(e)}")
+        except (ValueError, KeyError) as e:
+            self.logger.error(f"Data validation error: {str(e)}")
             raise
+        except Exception as e:
+            self.logger.error(f"Unexpected error during analysis: {str(e)}")
+            raise
+    
+    def _validate_input(self, broken_cars: List[Dict], functional_cars: List[Dict]) -> None:
+        """
+        Validate input data for analysis.
+        
+        Args:
+            broken_cars: List of dictionaries containing broken car listings
+            functional_cars: List of dictionaries containing functional car listings
+            
+        Raises:
+            ValueError: If input data is invalid
+        """
+        if not broken_cars or len(broken_cars) == 0:
+            raise ValueError("broken_cars list cannot be empty")
+        
+        if not functional_cars or len(functional_cars) == 0:
+            raise ValueError("functional_cars list cannot be empty")
+        
+        if not isinstance(broken_cars, list) or not isinstance(functional_cars, list):
+            raise ValueError("broken_cars and functional_cars must be lists")
+        
+        if not all(isinstance(car, dict) for car in broken_cars):
+            raise ValueError("All items in broken_cars must be dictionaries")
+        
+        if not all(isinstance(car, dict) for car in functional_cars):
+            raise ValueError("All items in functional_cars must be dictionaries")
+    
+    def _validate_dataframes(self, broken_df: pd.DataFrame, functional_df: pd.DataFrame) -> None:
+        """
+        Validate that DataFrames have required columns.
+        
+        Args:
+            broken_df: DataFrame containing broken car listings
+            functional_df: DataFrame containing functional car listings
+            
+        Raises:
+            KeyError: If required columns are missing
+        """
+        required_columns = ['make', 'model', 'year', 'price', 'mileage']
+        
+        missing_broken = [col for col in required_columns if col not in broken_df.columns]
+        if missing_broken:
+            raise KeyError(f"Missing required columns in broken_cars: {missing_broken}")
+        
+        missing_functional = [col for col in required_columns if col not in functional_df.columns]
+        if missing_functional:
+            raise KeyError(f"Missing required columns in functional_cars: {missing_functional}")
             
     def _analyze_prices(self, broken_df: pd.DataFrame, functional_df: pd.DataFrame) -> Dict:
         """
