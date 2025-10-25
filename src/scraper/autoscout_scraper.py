@@ -220,8 +220,9 @@ class AutoScout24Scraper(BaseScraper):
     def _parse_mileage(mileage_text: str) -> Optional[int]:
         """Parse mileage from text."""
         try:
-            # Extract numbers before 'km'
-            match = re.search(r'([\d.]+)', mileage_text.replace('.', ''))
+            # Extract numbers before 'km', remove dots as thousand separators
+            mileage_clean = mileage_text.replace('.', '').replace(',', '')
+            match = re.search(r'(\d+)', mileage_clean)
             return int(match.group(1)) if match else None
         except (ValueError, AttributeError):
             return None

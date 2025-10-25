@@ -221,9 +221,10 @@ class MobileDeScraper(BaseScraper):
     def _parse_price(price_text: str) -> Optional[float]:
         """Parse price from text."""
         try:
-            # Remove currency symbols and spaces, extract numbers
+            # Remove currency symbols and spaces, keep only digits and comma
+            # German format: 12.500,50 or 12500,50 -> 12500.50
             price_str = re.sub(r'[^\d,]', '', price_text)
-            price_str = price_str.replace('.', '').replace(',', '.')
+            price_str = price_str.replace(',', '.')
             return float(price_str) if price_str else None
         except (ValueError, AttributeError):
             return None
@@ -232,11 +233,10 @@ class MobileDeScraper(BaseScraper):
     def _parse_mileage(mileage_text: str) -> Optional[int]:
         """Parse mileage from text."""
         try:
-            # Extract numbers before 'km', remove dots
-            match = re.search(r'([\d.]+)', mileage_text)
-            if match:
-                mileage_str = match.group(1).replace('.', '')
-                return int(mileage_str)
-            return None
+            # Extract numbers, remove dots and commas as thousand separators
+            # German format: 150.000 km or 150000 km -> 150000
+            mileage_clean = mileage_text.replace('.', '').replace(',', '')
+            match = re.search(r'(\d+)', mileage_clean)
+            return int(match.group(1)) if match else None
         except (ValueError, AttributeError):
             return None
