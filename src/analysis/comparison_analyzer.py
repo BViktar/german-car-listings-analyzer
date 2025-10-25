@@ -84,10 +84,10 @@ class CarComparisonAnalyzer:
         Raises:
             ValueError: If input data is invalid
         """
-        if not broken_cars or len(broken_cars) == 0:
+        if not broken_cars:
             raise ValueError("broken_cars list cannot be empty")
         
-        if not functional_cars or len(functional_cars) == 0:
+        if not functional_cars:
             raise ValueError("functional_cars list cannot be empty")
         
         if not isinstance(broken_cars, list) or not isinstance(functional_cars, list):
