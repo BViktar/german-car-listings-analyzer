@@ -15,6 +15,14 @@ This module provides scrapers for German car listing websites to analyze and com
 
 ## Installation
 
+Install the package in development mode:
+
+```bash
+pip install -e .
+```
+
+Or install dependencies directly:
+
 ```bash
 pip install -r requirements.txt
 ```
@@ -169,6 +177,7 @@ To add a new car listing site:
 Example:
 
 ```python
+import requests
 from src.scraper import BaseScraper
 
 class NewSiteScraper(BaseScraper):
