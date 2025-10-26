@@ -16,6 +16,17 @@ parts/
 sdist/
 var/
 wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# IDE
 pip-wheel-metadata/
 share/python-wheels/
 *.egg-info/
@@ -36,6 +47,7 @@ env/
 *.swo
 *~
 
+# Generated reports
 # Testing
 .pytest_cache/
 .coverage
