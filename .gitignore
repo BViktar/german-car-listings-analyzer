@@ -27,6 +27,20 @@ ENV/
 .venv
 
 # IDE
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv
+
+# IDEs
 .vscode/
 .idea/
 *.swp
@@ -34,6 +48,13 @@ ENV/
 *~
 
 # Generated reports
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Reports (generated output)
 reports/
 
 # OS
